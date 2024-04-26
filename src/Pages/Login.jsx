@@ -1,43 +1,71 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { auth } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { NavLink, useNavigate } from "react-router-dom";
+import userStore from "../store/auth";
 
 const LoginPage = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleLogin = () => {
-    // Perform your login logic here
-    if (username === "example" && password === "password") {
-      // Redirect to dashboard or perform any other action upon successful login
-      console.log("Login successful!");
-    } else {
-      setError("Invalid username or password");
-    }
+  const { user, setUser } = userStore();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        navigate("/");
+        console.log(user);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+      });
   };
+
+  useEffect(() => {
+    if (user) navigate("/");
+  }, [user]);
 
   return (
     <div className="flex justify-center items-center h-screen">
-      <div className="bg-gray-100 p-8 rounded-lg shadow-md w-[400px]">
-        <button className="bg-transparent hover:bg-gray-600 text-black font-bold py-2 px-4 rounded focus:outline-none focus:ring focus:border-blue-300 mx-8">
-          Login
-        </button>
-        <button className="bg-transparent hover:bg-gray-600 text-black font-bold py-2 px-4 rounded focus:outline-none focus:ring focus:border-blue-300 mx-8">
-          Register
-        </button>
+      <form
+        onSubmit={handleLogin}
+        className="bg-gray-100 p-8 rounded-lg shadow-md w-[400px]"
+      >
+        <div className="mb-10">
+          <Link
+            to="/login"
+            className="bg-transparent hover:border-b-2 border-b-gray-700 text-gray-900 font-bold py-2 px-4 focus:outline-none  mx-8"
+          >
+            Login
+          </Link>
+          <Link
+            className="bg-transparent hover:border-b-2 border-b-gray-700 text-gray-500 font-bold py-2 px-4 focus:outline-none mx-8"
+            to="/register"
+          >
+            Register
+          </Link>
+        </div>
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <div className="mb-6">
           <label
             htmlFor="username"
             className="block text-gray-700 font-bold mb-2"
           >
-            Username or Email
+            Email
           </label>
           <input
             type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="border rounded-md px-4 py-2 w-full focus:outline-none focus:ring focus:border-blue-300"
           />
         </div>
@@ -81,7 +109,7 @@ const LoginPage = () => {
             Login
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

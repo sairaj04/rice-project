@@ -1,30 +1,59 @@
-import React, { useState } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { auth } from "../firebase";
+import { NavLink, useNavigate } from "react-router-dom";
+import userStore from "../store/auth";
 
 const RegistrationPage = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const { user, setUser } = userStore();
+
+  const onSubmit = async (e) => {
     e.preventDefault();
-    // Perform your registration logic here
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-    } else {
-      // Proceed with registration
-      console.log("Registration successful!");
-    }
+
+    await createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        setUser(user);
+        navigate("/");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+      });
   };
+
+  useEffect(() => {
+    if (user) navigate("/");
+  }, [user]);
 
   return (
     <div className="flex justify-center items-center h-screen">
       <form
-        onSubmit={handleSubmit}
+        onSubmit={onSubmit}
         className="bg-gray-100 p-8 rounded-lg shadow-md w-[400px]"
       >
-        <h2 className="text-2xl font-semibold mb-4">Register</h2>
+        <div className="mb-10">
+          <Link
+            to="/login"
+            className="bg-transparent hover:border-b-2 border-b-gray-700 text-gray-500 font-bold py-2 px-4 focus:outline-none  mx-8"
+          >
+            Login
+          </Link>
+          <Link
+            className="bg-transparent hover:border-b-2 border-b-gray-700 text-gray-900 font-bold py-2 px-4 focus:outline-none mx-8"
+            to="/register"
+          >
+            Register
+          </Link>
+        </div>
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <div className="mb-4">
           <label

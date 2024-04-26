@@ -13,7 +13,6 @@ function Footer() {
           <div className="mb-8 md:w-1/3">
             <p className="text-lg mb-4">
               $10 discount for your first order
-              <br />{" "}
               <span className="font-bold">
                 {" "}
                 Join our newsletter and get... <br />
@@ -39,9 +38,15 @@ function Footer() {
             </div>
           </div>
           <img src={footer} alt="" />
-          <div>
+        </div>
+        <div
+          className="
+        grid grid-cols-5 gap-4 mt-8
+        "
+        >
+          <div className="max-w-sm mx-auto col-span-2 mr-10">
             <textarea
-              className="block mx-auto mt-6 p-4 border rounded-lg "
+              className="block w-full max-full mt-6 p-4 border rounded-lg "
               placeholder="Enter your message..."
             ></textarea>
             <p className="mt-2 p-4 mx-auto">
@@ -53,26 +58,21 @@ function Footer() {
           <div className="mb-8 md:w-1/3">
             <p className="text-lg mb-4">Explore</p>
             <p>About Us</p>
-            <br />
             <p>Products</p>
-            <br />
             <p>Category</p>
-            <br />
           </div>
           <div className="mb-8 md:w-1/3">
-            <p className="text-lg mb-4">Contact Us</p>
-            <br />
+            <p className="text-lg mb-4 whitespace-nowrap">Contact Us</p>
             <p>Email: contact@example.com</p>
-            <br />
             <p>Phone: +1234567890</p>
           </div>
-          <div className="mb-8 md:w-1/3">
-            <p className="text-lg mb-4">Stay Connected</p>
-            <div className="flex space-x-4 cursor-pointer ">
-              <FaInstagram />
-              <AiOutlineYoutube />
-              <FaXTwitter />
-              <FaFacebookMessenger />
+          <div className="mb-8">
+            <p className="text-lg mb-4 whitespace-nowrap">Stay Connected</p>
+            <div className="flex gap-4">
+              <FaInstagram className="w-8 h-8 cursor-pointer" />
+              <AiOutlineYoutube className="w-8 h-8 cursor-pointer" />
+              <FaXTwitter className="w-8 h-8 cursor-pointer" />
+              <FaFacebookMessenger className="w-8 h-8 cursor-pointer" />
             </div>
           </div>
         </div>
